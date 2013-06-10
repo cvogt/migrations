@@ -5,13 +5,14 @@ import scala.slick.jdbc.JdbcBackend
 import scala.slick.jdbc.meta.CodeGen
 import sys.process._
 import java.io.File
+import scala.slick.migrations.DB
 
 
-class Schema( driver:String, schema:reflect.Schema, package_ :String )(implicit session:JdbcBackend#Session) extends GeneratorBase{
+class Schema(  schema:reflect.Schema, package_ :String )(implicit session:JdbcBackend#Session) extends GeneratorBase{
   val s = schema
   def table(t:reflect.Table) = new Table(this,t) 
   def tables : List[Table] = s.tables.map(table _)
-  def driverImport = "import scala.slick.driver."+driver+"Driver.simple._" 
+  def driverImport = DB.importline
   def render = driverImport + lineBreak + s"""
 package ${baseTablePackage}{
 ${indent(tables.map(_.renderBaseTable).mkString(lineBreak))}

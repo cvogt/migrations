@@ -1,8 +1,9 @@
 package scala.slick.migrations
 
 import java.io._
-import scala.slick.driver.H2Driver.simple._
-import Database.threadLocalSession
+import DB.driver.simple._
+import DB.session
+import language.existentials
 
 trait Migration[T]{
   def id : T
@@ -22,8 +23,7 @@ trait MigrationManager[T]{
   def ids = migrations.map(_.id)
   def alreadyAppliedIds : Seq[T]
   def notYetAppliedMigrations = migrations.drop(alreadyAppliedIds.size)
-  def dblocation = System.getProperty("user.dir")+"/test.tb"
-  def db = Database.forURL(s"jdbc:h2:$dblocation", driver = "org.h2.Driver")
+  def db = DB.database
   def up {
     // make sure there are no duplicate ids
     assert( Set(migrations.map(_.id):_*).size == migrations.size )
@@ -38,7 +38,7 @@ trait MigrationManager[T]{
               migration.up
               afterApply(migration)
             } catch {
-              case e:Exception => threadLocalSession.rollback; throw e
+              case e:Exception => session.rollback; throw e
             }
           }
         }

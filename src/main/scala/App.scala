@@ -1,6 +1,4 @@
 import scala.slick.migrations._
-import scala.slick.driver.H2Driver.simple._
-import Database.threadLocalSession
 object App{
   def run(mm:MyMigrationManager){
 /*
