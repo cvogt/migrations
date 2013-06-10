@@ -1,8 +1,8 @@
 package scala.slick.migrations
 
 import java.io._
-import scala.slick.driver.H2Driver.simple._
-import Database.threadLocalSession
+import DB.driver.simple._
+import DB.session
 import language.existentials
 
 trait Migration[T]{
@@ -38,7 +38,7 @@ trait MigrationManager[T]{
               migration.up
               afterApply(migration)
             } catch {
-              case e:Exception => threadLocalSession.rollback; throw e
+              case e:Exception => session.rollback; throw e
             }
           }
         }

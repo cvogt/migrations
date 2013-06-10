@@ -1,7 +1,6 @@
 import scala.slick.migrations._
 
 object SampleMigrations extends MyMigrationManager{
-  import scala.slick.driver.H2Driver.simple._
   // WARNING!! never change version number or contents of any already published migration
   def migrations  = List(
     SqlMigration( 1 )(List(

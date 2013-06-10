@@ -17,21 +17,9 @@ case class DB(driver: String, url: String, user: String, password: String) {
     case "com.microsoft.sqlserver.jdbc.SQLServerDriver" => SQLServerDriver
     case _ => H2Driver
   }
-  def slickdriverimport: String = {
-    val dbString = driver match {
-      case "org.apache.derby.jdbc.EmbeddedDriver" => "DerbyDriver"
-      case "org.h2.Driver" => "H2Driver"
-      case "org.hsqldb.jdbcDriver" => "HsqldbDriver"
-      case "com.mysql.jdbc.Driver" => "MySQLDriver"
-      case "org.postgresql.Driver" => "PostgresDriver"
-      case "org.sqlite.JDBC" => "SQLiteDriver"
-      case "com.microsoft.sqlserver.jdbc.SQLServerDriver" => "SQLServerDriver"
-      case _ => "H2Driver"
-    }
-    slickdriver.getClass().getName() + ".simple._"
-    //"import scala.slick.driver."+dbString+".simple._"
-  }
+  def slickdriverimport = slickdriver.getClass().getName() + ".simple._"
   def db = slickdriver.simple.Database.forURL(url, driver = driver, user = user, password = password)
+  def session = slickdriver.simple.Database.threadLocalSession
 }
 object DB {
   val mydb = DB()
@@ -54,5 +42,7 @@ object DB {
 
   def database = mydb.db
   def importline = mydb.slickdriverimport
+  val  driver = mydb.slickdriver
+  implicit def session = mydb.session
   
 }

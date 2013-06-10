@@ -1,10 +1,7 @@
 import scala.slick.jdbc.codegen
 import scala.slick.jdbc.reflect
-import scala.slick.jdbc.JdbcBackend
-import scala.slick.driver.H2Driver
-import scala.slick.driver.H2Driver.simple._
 import scala.slick.migrations._
-import Database.threadLocalSession
+import DB.session
 object SampleCodegen {
   def gen(mm: MyMigrationManager) {
     mm.db withSession {
@@ -12,6 +9,7 @@ object SampleCodegen {
         println("Your database is not up to date, code generation denied for compatibility reasons. Please update first.")
         return
       }
+      
       class MyTableGen(schema: codegen.Schema, table: reflect.Table) extends codegen.Table(schema, table) {
         override def entityName = Map(
           "users" -> "User")(name)

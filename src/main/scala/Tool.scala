@@ -32,8 +32,7 @@ object Tool extends App{
     case "codegen" :: Nil => 
       SampleCodegen.gen( SampleMigrations ) // SampleMigrations is passed in here only because it contains the db connection
     case "dbdump" :: Nil =>
-      import scala.slick.driver.H2Driver.simple._
-      import Database.threadLocalSession
+      import DB.session
       import scala.slick.jdbc.StaticQuery._
       SampleMigrations.db.withSession{
         println( queryNA[String]("SCRIPT").list.mkString("\n") )
