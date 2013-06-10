@@ -17,7 +17,7 @@ case class DB(driver: String, url: String, user: String, password: String) {
     case "com.microsoft.sqlserver.jdbc.SQLServerDriver" => SQLServerDriver
     case _ => H2Driver
   }
-  def slickdriverimport = slickdriver.getClass().getName() + ".simple._"
+  def slickdriverimport = "import " + slickdriver.getClass().getName().replaceAll("\\$","") + ".simple._"
   def db = slickdriver.simple.Database.forURL(url, driver = driver, user = user, password = password)
   def session = slickdriver.simple.Database.threadLocalSession
 }
