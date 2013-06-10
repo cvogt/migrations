@@ -22,10 +22,11 @@ case class DB(driver: String, url: String, user: String, password: String) {
   def session = slickdriver.simple.Database.threadLocalSession
 }
 object DB {
-  val mydb = DB()
+
   val conf = ConfigFactory.load
-  
+
   def confOpt(key: String) = catching(classOf[ConfigException]).opt(conf.getString(key))
+
   def dbConfig(item: String) = confOpt("datasource") match {
     case Some(ds) => s"db.$ds.$item"
     case _ => s"db.default.$item"
@@ -39,10 +40,11 @@ object DB {
       case _ => DB("org.h2.Driver", "jdbc:h2:" + System.getProperty("user.dir") + "/test.tb", "sa", "")
     }
   }
+  val mydb = DB()
 
   def database = mydb.db
   def importline = mydb.slickdriverimport
-  val  driver = mydb.slickdriver
+  val driver = mydb.slickdriver
   implicit def session = mydb.session
-  
+
 }
