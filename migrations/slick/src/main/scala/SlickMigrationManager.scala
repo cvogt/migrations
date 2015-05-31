@@ -1,6 +1,7 @@
 package scala.migrations.slick
 
 import java.io._
+import com.typesafe.config._
 import scala.slick.driver.H2Driver.simple._
 import Database.dynamicSession
 import scala.slick.jdbc.StaticQuery._
@@ -12,11 +13,18 @@ class MigrationsTable(tag: Tag) extends Table[Int](tag, "__migrations__") {
   def * = id
 }
 
+object SlickMigrationManager {
+  private val config = ConfigFactory.load()
+  val dburl = config.getString("migrations.db.url")
+  val dbdriver = config.getString("migrations.db.driver")
+}
+
 trait SlickMigrationManager extends MigrationManager[Int] {
-  def dblocation = System.getProperty("user.dir")+"/test.tb"
-  def db = Database.forURL(s"jdbc:h2:$dblocation", driver = "org.h2.Driver")
+  def db = Database.forURL(SlickMigrationManager.dburl,
+    driver = SlickMigrationManager.dbdriver)
   override def init = db.withDynSession(migrationsTable.ddl.create)
-  override def alreadyAppliedIds = db.withDynSession{migrationsTable.map(_.id).list}
+  override def alreadyAppliedIds =
+    db.withDynSession{migrationsTable.map(_.id).list}
   override def latest = alreadyAppliedIds.last
   val migrationsTable = TableQuery[MigrationsTable]
 
