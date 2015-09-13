@@ -1,3 +1,10 @@
+**Update 09.2015:** This vision of this prototype has been realized into a real project titled "Scala Forklift". 
+https://github.com/lastland/scala-forklift
+
+
+
+**Old description from 2013:**
+
 A proof of concept of a tool for data migrations
 ===========================================================
 Feedback and comments are very welcome! Especially if your use case cannot be realized using this tool.
